@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "558848125582",
+    "project_id": "housefinancialmanagement",
+    "storage_bucket": "housefinancialmanagement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558848125582:android:d112a15897b42dfdeaf7df",
+        "android_client_info": {
+          "package_name": "com.app.myhousereport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558848125582-dt0k5v4k29o468tavj0simj47mggdn95.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIniFT9oA2Vl2-gD9GzgYBHszlxHa_0ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558848125582-dt0k5v4k29o468tavj0simj47mggdn95.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
