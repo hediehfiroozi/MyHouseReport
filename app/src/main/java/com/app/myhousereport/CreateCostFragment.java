@@ -106,6 +106,8 @@ public class CreateCostFragment extends Fragment {
             mBinding.tietDate.setText("");
             mBinding.tietDescription.setText("");
             mBinding.tietCategory.setText("");
+
+                ((MainActivity) getActivity()).updateReportFragment();
         })
                 .addOnFailureListener(e -> {
                     showSnackbar(e.getMessage());

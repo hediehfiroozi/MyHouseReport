@@ -108,6 +108,9 @@ public class CreateIncomeFragment extends Fragment {
             mBinding.tietDescription.setText("");
             mBinding.tietCategory.setText("");
 
+            ((MainActivity) getActivity()).updateReportFragment();
+
+
         })
                 .addOnFailureListener(e -> {
                     showSnackbar(e.getMessage());

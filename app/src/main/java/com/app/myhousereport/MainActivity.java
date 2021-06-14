@@ -15,6 +15,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding mBinding;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +23,16 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         mBinding.viewPager.setOffscreenPageLimit(1);
-        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        adapter = new MyAdapter(getSupportFragmentManager());
         adapter.addFragment(new CreateIncomeFragment(), "درآمد");
         adapter.addFragment(new CreateCostFragment(), "هزینه");
         adapter.addFragment(new ReportFragment(), "گزارش");
         mBinding.viewPager.setAdapter(adapter);
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
+    }
+
+    public void updateReportFragment() {
+        if (adapter != null) ((ReportFragment) adapter.fragments.get(2)).update();
     }
 
     static class MyAdapter extends FragmentPagerAdapter {

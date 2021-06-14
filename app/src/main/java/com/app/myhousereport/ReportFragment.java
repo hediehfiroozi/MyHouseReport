@@ -38,31 +38,24 @@ public class ReportFragment extends Fragment {
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getDataFromFirebase();
+
+    }
+
     private void getDataFromFirebase() {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("در حال ارتباط...");
 //        progressDialog.show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("report")
-                .orderBy("date")
                 .whereEqualTo("user", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .get()
                 .addOnCompleteListener((Task<QuerySnapshot> task) -> {
                     if (task.isSuccessful()) {
-                        List<ReportModel> reportModels = new ArrayList<>();
-                        int daramad = 0;
-                        int hazine = 0;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            ReportModel reportModel = new ReportModel(document.getId(), document.getData());
-                            if (reportModel.type == 1)
-                                daramad += reportModel.price;
-                            if (reportModel.type == 0)
-                                hazine += reportModel.price;
-                            reportModels.add(reportModel);
-                        }
-
-                        int mojoodi = daramad - hazine;
-                        bindData(reportModels, daramad, hazine, mojoodi);
+                        bindData(task.getResult());
 
                     } else {
                         Log.e("ReportFragment", "Error!", task.getException());
@@ -71,19 +64,33 @@ public class ReportFragment extends Fragment {
                 });
     }
 
-    private void bindData(List<ReportModel> reportModels, int daramad, int hazine, int mojoodi) {
+    List<ReportModel> reportModels = new ArrayList<>();
+
+    private void bindData(QuerySnapshot result) {
+        int daramad = 0;
+        int hazine = 0;
+        for (QueryDocumentSnapshot document : result) {
+            ReportModel reportModel = new ReportModel(document.getId(), document.getData());
+            if (reportModel.type == 1)
+                daramad += reportModel.price;
+            if (reportModel.type == 0)
+                hazine += reportModel.price;
+            reportModels.add(reportModel);
+        }
+        ReportAdapter adapter = new ReportAdapter(getContext(), reportModels);
+        mBinding.recyclerView.setAdapter(adapter);
+
+
+        int mojoodi = daramad - hazine;
+
         mBinding.textViewCosts.setText(String.format("%d تومان", hazine));
         mBinding.textViewIncomes.setText(String.format("%d تومان", daramad));
         mBinding.textView.setText(String.format("%d تومان", mojoodi));
-        ReportAdapter adapter = new ReportAdapter(getContext(), reportModels);
-        mBinding.recyclerView.setAdapter(adapter);
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void update() {
         getDataFromFirebase();
     }
-
 }
 
