@@ -85,7 +85,7 @@ public class CreateIncomeFragment extends Fragment {
         Map<String, Object> user = new HashMap<>();
         user.put("user", FirebaseAuth.getInstance().getCurrentUser().getUid());
         user.put("title", mBinding.tietTitle.getText().toString());
-        user.put("price", Integer.parseInt(mBinding.tietPrice.getText().toString()));
+        user.put("price", Long.parseLong(mBinding.tietPrice.getText().toString()));
         user.put("date", mBinding.tietDate.getText().toString());
         user.put("description", mBinding.tietDescription.getText().toString());
         user.put("category", mBinding.tietCategory.getText().toString());

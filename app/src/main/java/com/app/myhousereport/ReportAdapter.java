@@ -14,10 +14,12 @@ import java.util.List;
 public class ReportAdapter extends RecyclerView.Adapter<ReportViewHolder> {
     Context context;
     List<ReportModel> reportModels;
+    ReportAdapterListener listener;
 
-    public ReportAdapter(Context context, List<ReportModel> reportModels) {
+    public ReportAdapter(Context context, List<ReportModel> reportModels, ReportAdapterListener listener) {
         this.context = context;
         this.reportModels = reportModels;
+        this.listener = listener;
     }
 
     @Override
@@ -39,8 +41,18 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportViewHolder> {
         holder.tvTitle.setText(reportModel.title);
         holder.tvCategory.setText(reportModel.category);
 
-        holder.parent.setOnClickListener(v -> {
+        holder.buttonDelete.setOnClickListener(v -> {
+            listener.onDeleteReportClick(reportModel);
+        });
 
+        holder.buttonDelete.setOnClickListener(v -> {
+            listener.onDeleteReportClick(reportModel);
+        });
+        holder.buttonShow.setOnClickListener(v -> {
+            listener.onShowReportClick(reportModel);
+        });
+        holder.buttonEdit.setOnClickListener(v -> {
+            listener.onEditReportClick(reportModel);
         });
     }
 

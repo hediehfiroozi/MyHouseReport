@@ -34,7 +34,6 @@
                     android:drawableRight="@drawable/ic_baseline_account_balance_wallet_24"
                     android:hint="عنوان را وارد کنید" />
 
-
                 <EditText
                     android:id="@+id/tietCategory"
 

@@ -1,12 +1,19 @@
 package com.app.myhousereport;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.app.myhousereport.databinding.FragmentReportBinding;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -56,7 +64,6 @@ public class ReportFragment extends Fragment {
                 .addOnCompleteListener((Task<QuerySnapshot> task) -> {
                     if (task.isSuccessful()) {
                         bindData(task.getResult());
-
                     } else {
                         Log.e("ReportFragment", "Error!", task.getException());
                         progressDialog.hide();
@@ -67,19 +74,48 @@ public class ReportFragment extends Fragment {
     List<ReportModel> reportModels = new ArrayList<>();
 
     private void bindData(QuerySnapshot result) {
+        reportModels = new ArrayList<>();
         int daramad = 0;
         int hazine = 0;
         for (QueryDocumentSnapshot document : result) {
-            ReportModel reportModel = new ReportModel(document.getId(), document.getData());
+            ReportModel reportModel = new ReportModel(document);
             if (reportModel.type == 1)
                 daramad += reportModel.price;
             if (reportModel.type == 0)
                 hazine += reportModel.price;
             reportModels.add(reportModel);
         }
-        ReportAdapter adapter = new ReportAdapter(getContext(), reportModels);
-        mBinding.recyclerView.setAdapter(adapter);
+        ReportAdapter adapter = new ReportAdapter(getContext(), reportModels, new ReportAdapterListener() {
+            @Override
+            public void onDeleteReportClick(ReportModel reportModel) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("report").document(reportModel.id).delete()
+                        .addOnFailureListener(e -> {
+                            showSnackbar("خطایی رخ داد است. دوباره تلاش کنید.");
+                        })
+                        .addOnSuccessListener(unused -> {
+                            showSnackbar("آیتم با موفقیت حذف شد.");
+                            update();
+                        });
+            }
 
+            @Override
+            public void onShowReportClick(ReportModel reportModel) {
+                Intent intent = new Intent(getContext(), ShowEditActivity.class);
+                intent.putExtra("report", reportModel.id);
+                intent.putExtra("enable_edit_mode", false);
+                activityResultLauncher.launch(intent);
+            }
+
+            @Override
+            public void onEditReportClick(ReportModel reportModel) {
+                Intent intent = new Intent(getContext(), ShowEditActivity.class);
+                intent.putExtra("report", reportModel.id);
+                intent.putExtra("enable_edit_mode", true);
+                activityResultLauncher.launch(intent);
+            }
+        });
+        mBinding.recyclerView.setAdapter(adapter);
 
         int mojoodi = daramad - hazine;
 
@@ -92,5 +128,20 @@ public class ReportFragment extends Fragment {
     public void update() {
         getDataFromFirebase();
     }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(mBinding.getRoot(), message, Snackbar.LENGTH_LONG)
+                .setAction("بستن", view -> {
+
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                .show();
+    }
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result1 -> {
+                update();
+            });
 }
 
