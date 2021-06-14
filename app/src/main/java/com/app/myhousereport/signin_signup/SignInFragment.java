@@ -34,9 +34,8 @@ public class SignInFragment extends Fragment {
     }
 
     private void signin() {
-
-        String email = mBinding.textInputEditTextEmail.getText().toString();
-        String password = mBinding.textInputEditTextPassword.getText().toString();
+        String email = mBinding.etEmail.getText().toString();
+        String password = mBinding.etPassword.getText().toString();
 
         if (email == null || TextUtils.isEmpty(email)) {
             showSnackbar("لطفا ایمیل خود را وارد کنید");

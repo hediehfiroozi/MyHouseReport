@@ -30,38 +30,20 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayoutName"
+                <EditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="20dp"
-                    android:hint="ایمیل"
-                    app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusTopStart="10dp"
-                    app:startIconDrawable="@drawable/ic_baseline_email_24">
+                    android:layout_marginBottom="10dp"
+                    android:drawableRight="@drawable/ic_baseline_email_24"
+                    android:hint="ایمیل" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/text_input_edit_text_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayoutPassword"
+                <EditText
+                    android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:hint="رمزعبور"
-                    app:boxCornerRadiusTopEnd="10dp"
-                    app:boxCornerRadiusTopStart="10dp"
-                    app:startIconDrawable="@drawable/ic_baseline_vpn_key_24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textInputEditTextPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:drawableRight="@drawable/ic_baseline_vpn_key_24"
+                    android:hint="رمزعبور" />
 
                 <Button
                     android:id="@+id/btnSignUp"

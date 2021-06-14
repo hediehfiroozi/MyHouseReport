@@ -3,8 +3,14 @@ package com.app.myhousereport;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.app.myhousereport.databinding.ActivityMainBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,5 +21,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+        mBinding.viewPager.setOffscreenPageLimit(1);
+        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        adapter.addFragment(new CreateIncomeFragment(), "درآمد");
+        adapter.addFragment(new CreateCostFragment(), "هزینه");
+        adapter.addFragment(new ReportFragment(), "گزارش");
+        mBinding.viewPager.setAdapter(adapter);
+        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
+    }
+
+    static class MyAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> fragments = new ArrayList<>();
+        private final List<String> titles = new ArrayList<>();
+
+        public MyAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            titles.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles.get(position);
+        }
     }
 }
